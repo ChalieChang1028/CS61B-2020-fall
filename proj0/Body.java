@@ -1,5 +1,6 @@
 public class Body{
-  public double xxPos, yyPos, xxVel, yyVel, mass, G=6.67e-11;
+  public double xxPos, yyPos, xxVel, yyVel, mass;
+  private double G=6.67e-11;
   public String imgFileName;
   public Body(double xP, double yP, double xV, double yV,
               double m, String img){
