@@ -25,17 +25,17 @@ public class Body{
   }
 
   public double calcForceExertedBy(Body b){
-    if (b.xxPos==xxPos && b.yyPos==yyPos) return 0.0;
+    if (this == b) return 0.0;
     return G*mass*b.mass/Math.pow(calcDistance(b), 2);
   }
 
   public double calcForceExertedByX(Body b){
-    if (b.xxPos==xxPos && b.yyPos==yyPos) return 0.0;
+    if (this == b) return 0.0;
     return calcForceExertedBy(b)*(b.xxPos-xxPos)/calcDistance(b);
   }
 
   public double calcForceExertedByY(Body b){
-    if (b.xxPos==xxPos && b.yyPos==yyPos) return 0.0;
+    if (this == b) return 0.0;
     return calcForceExertedBy(b)*(b.yyPos-yyPos)/calcDistance(b);
   }
 

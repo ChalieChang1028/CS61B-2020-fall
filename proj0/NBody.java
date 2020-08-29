@@ -6,6 +6,8 @@ public class NBody{
     double R = readRadius(filename);
     Body[] allBodies = readBodies(filename);
 
+
+    StdAudio.play("audio/2001.mid");
     StdDraw.enableDoubleBuffering();
     StdDraw.setScale(-R, R);
     StdDraw.clear();
