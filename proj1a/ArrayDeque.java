@@ -80,10 +80,10 @@ public class ArrayDeque<T> {
         if (items.length >= 16 && size < items.length / 4.0) {
             T[] newA = (T[]) new Object[newlen];
             for (int i = nextF + 1; i < nextF + size + 1; i++) {
-                newA[i % newlen] = items[i % items.length];
+                newA[i - nextF - 1] = items[i % items.length];
             }
-            nextF %= newlen;
-            nextL %= newlen;
+            nextF = newlen - 1;
+            nextL = size;
             items = newA;
         } else {
             items[nextF] = null;
@@ -103,10 +103,10 @@ public class ArrayDeque<T> {
         if (items.length >= 16 && size < items.length / 4.0) {
             T[] newA = (T[]) new Object[newlen];
             for (int i = nextF + 1; i < nextF + size + 1; i++) {
-                newA[i % newlen] = items[i % items.length];
+                newA[i - nextF - 1] = items[i % items.length];
             }
-            nextF %= newlen;
-            nextL %= newlen;
+            nextF = newlen - 1;
+            nextL = size;
             items = newA;
         } else {
             items[nextL] = null;
