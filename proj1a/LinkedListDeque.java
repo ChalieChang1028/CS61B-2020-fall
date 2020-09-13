@@ -1,5 +1,5 @@
 public class LinkedListDeque<T>{
-    public class Node{
+    private class Node{
         T val;
         Node next, pre;
         Node(T data) {
@@ -9,7 +9,7 @@ public class LinkedListDeque<T>{
     }
 
     int size = 0;
-    Node front, back, finder = null;
+    private Node front, back;
 
     public LinkedListDeque(){
         front = back = null;
@@ -63,7 +63,9 @@ public class LinkedListDeque<T>{
         front = front.next;
         if (front != null)
             front.pre = null;
-        size -= 1;
+        else
+            back = null;
+        size = Math.max(0, size-1);
         return ans.val;
     }
     public T removeLast(){
@@ -73,7 +75,9 @@ public class LinkedListDeque<T>{
         back = back.pre;
         if (back != null)
             back.next = null;
-        size -= 1;
+        else
+            front = null;
+        size = Math.max(size-1, 0);
         return ans.val;
     }
     public T get(int index){
@@ -85,7 +89,7 @@ public class LinkedListDeque<T>{
         }
         return tep.val;
     }
-    public T getRhelper(int index, Node n){
+    private T getRhelper(int index, Node n){
         if (n == null)
             return null;
         if (index == 0)
