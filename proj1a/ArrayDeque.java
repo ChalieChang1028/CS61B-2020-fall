@@ -72,11 +72,11 @@ public class ArrayDeque <T> {
             return null;
         }
         size -= 1;
-        nextF = (1+nextF) % items.length;
+        nextF = (1 + nextF) % items.length;
         int newlen = items.length/2 + 1;
         T ans = items[nextF];
 
-        if (items.length >= 16 && size - 1 < items.length/4.0) {
+        if (items.length >= 16 && size < items.length/4.0) {
             T[] newA = (T[]) new Object[newlen];
             for (int i = nextF+1; i < nextF+size+1; i++) {
                 newA[i%newlen] = items[i% items.length];
@@ -99,7 +99,7 @@ public class ArrayDeque <T> {
         int newlen = items.length/2 + 1;
         T ans = items[nextL];
 
-        if (items.length >= 16 && size - 1 < items.length/4.0) {
+        if (items.length >= 16 && size < items.length/4.0) {
             T[] newA = (T[]) new Object[newlen];
             for (int i = nextF+1; i < nextF+size+1; i++) {
                 newA[i%newlen] = items[i% items.length];
