@@ -13,13 +13,14 @@ public class ArrayDeque <T> {
     public void addFirst(T item) {
         if (nextF == nextL) {
             items[nextF] = item;
-            T[] newA = (T[]) new Object[items.length + 1];
+            T[] newA = (T[]) new Object[items.length * 2 - 1];
             for (int i = 0; i < nextF; i++) {
                 newA[i] = items[i];
             }
             for (int i = nextF; i < items.length; i++){
-                newA[i+1] = items[i];
+                newA[i + items.length] = items[i];
             }
+            nextF += items.length - 2;
             items = newA;
         } else {
             items[nextF] = item;
@@ -31,14 +32,14 @@ public class ArrayDeque <T> {
     public void addLast(T item) {
         if (nextF == nextL) {
             items[nextL] = item;
-            T[] newA = (T[]) new Object[items.length + 1];
+            T[] newA = (T[]) new Object[items.length * 2 - 1];
             for (int i = 0; i <= nextF; i++) {
                 newA[i] = items[i];
             }
             for (int i = nextF+1; i < items.length; i++){
-                newA[i+1] = items[i];
+                newA[i + items.length] = items[i];
             }
-            nextF += 1;
+            nextF += items.length - 1;
             nextL += 1;
             items = newA;
         } else {
