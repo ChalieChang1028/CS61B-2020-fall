@@ -1,5 +1,12 @@
-public class LinkedListDeque<T>{
-    private class Node{
+/*
+    Made by Ming Cheng, 9/12/2020
+    Deque implementation.
+ */
+public class LinkedListDeque<T> {
+    /*
+        Helper Node Class.
+     */
+    private class Node {
         T val;
         Node next, pre;
         Node(T data) {
@@ -7,19 +14,21 @@ public class LinkedListDeque<T>{
             next = pre = null;
         }
     }
-
-    int size = 0;
+    /*
+        private v
+     */
+    private int size = 0;
     private Node front, back;
 
-    public LinkedListDeque(){
+    public LinkedListDeque() {
         front = back = null;
     }
-    public void addFirst(T item){
+
+    public void addFirst(T item) {
         if (front == null) {
             front = new Node(item);
             back = front;
-        }
-        else {
+        } else {
             Node newNode = new Node(item);
             front.pre = newNode;
             newNode.next = front;
@@ -27,12 +36,12 @@ public class LinkedListDeque<T>{
         }
         size += 1;
     }
-    public void addLast(T item){
+
+    public void addLast(T item) {
         if (back == null) {
             front = new Node(item);
             back = front;
-        }
-        else {
+        } else {
             Node newNode = new Node(item);
             back.next = newNode;
             newNode.pre = back;
@@ -40,63 +49,80 @@ public class LinkedListDeque<T>{
         }
         size += 1;
     }
-    public boolean isEmpty(){
-        if (size == 0)
+
+    public boolean isEmpty() {
+        if (size == 0) {
             return true;
+        }
         return false;
     }
-    public int size(){
+
+    public int size() {
         return size;
     }
-    public void printDeque(){
+
+    public void printDeque() {
         Node tep = front;
-        while (tep != null){
+        while (tep != null) {
             System.out.print(tep.val);
             tep = tep.next;
         }
         System.out.println();
     }
-    public T removeFirst(){
-        if (front == null)
+
+    public T removeFirst() {
+        if (front == null) {
             return null;
+        }
         Node ans = front;
         front = front.next;
-        if (front != null)
+        if (front != null) {
             front.pre = null;
-        else
+        } else {
             back = null;
-        size = Math.max(0, size-1);
+        }
+        size = Math.max(0, size - 1);
         return ans.val;
     }
-    public T removeLast(){
-        if (back == null)
+
+    public T removeLast() {
+        if (back == null) {
             return null;
+        }
         Node ans = back;
         back = back.pre;
-        if (back != null)
+        if (back != null) {
             back.next = null;
-        else
+        } else {
             front = null;
-        size = Math.max(size-1, 0);
+        }
+        size = Math.max(size - 1, 0);
         return ans.val;
     }
-    public T get(int index){
+
+    public T get(int index) {
         Node tep = front;
-        while (index != 0){
-            if (tep == null)
+        while (index != 0) {
+            if (tep == null) {
                 return null;
+            }
             tep = tep.next;
+            index -= 1;
         }
         return tep.val;
     }
-    private T getRhelper(int index, Node n){
-        if (n == null)
+
+    private T getRhelper(int index, Node n) {
+        if (n == null) {
             return null;
-        if (index == 0)
+        }
+        if (index == 0) {
             return n.val;
-        return getRhelper(index-1, n.next);
+        }
+        return getRhelper(index - 1, n.next);
     }
-    public T getRecursive(int index){
+
+    public T getRecursive(int index) {
         return getRhelper(index, front);
     }
 
