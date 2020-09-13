@@ -1,11 +1,5 @@
-/*
-    Made by Ming Cheng, 9/12/2020
-    Deque implementation.
- */
 public class LinkedListDeque<T> {
-    /*
-        Helper Node Class.
-     */
+
     private class Node {
         T val;
         Node next, pre;
@@ -14,9 +8,7 @@ public class LinkedListDeque<T> {
             next = pre = null;
         }
     }
-    /*
-        private v
-     */
+
     private int size = 0;
     private Node front, back;
 
@@ -64,7 +56,7 @@ public class LinkedListDeque<T> {
     public void printDeque() {
         Node tep = front;
         while (tep != null) {
-            System.out.print(tep.val);
+            System.out.print(tep.val + " ");
             tep = tep.next;
         }
         System.out.println();
