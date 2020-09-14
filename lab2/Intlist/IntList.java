@@ -7,9 +7,7 @@ import java.util.Formatter;
  *         [Do not modify this file.]
  */
 public class IntList {
-    /**
-     * First element of this IntList.
-     */
+
     public int first;
     /**
      * Remaining elements of this IntList
@@ -44,7 +42,7 @@ public class IntList {
     }
 
     /**
-     * Returns a of equal to L with all elements squared. Non-destructive.
+     * Returns a of equal to L with all elements squared. Non-dest
      */
     public static IntList squareListIterative(IntList L) {
         if (L == null) {
