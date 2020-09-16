@@ -6,7 +6,7 @@ public class TestOffByN {
 
     static CharacterComparator offByN = new OffByN(2);
     @Test
-    public void TestOffByOne() {
+    public void testOffByOne() {
         assertEquals(false, offByN.equalChars('a', 'b'));
         assertEquals(true, offByN.equalChars('a', 'c'));
         assertEquals(false, offByN.equalChars('b', 'c'));

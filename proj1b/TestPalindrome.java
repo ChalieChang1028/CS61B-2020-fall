@@ -38,7 +38,7 @@ public class TestPalindrome {
         String s6 = "&-1";
         assertEquals(true, palindrome.isPalindrome(s1, cc));
         assertEquals(false, palindrome.isPalindrome(s2, cc));
-        assertEquals(true, palindrome.isPalindrome(s3, cc));
+        assertEquals(false, palindrome.isPalindrome(s3, cc));
         assertEquals(true, palindrome.isPalindrome(s4, cc));
         assertEquals(false, palindrome.isPalindrome(s5, cc));
         assertEquals(false, palindrome.isPalindrome(s6, cc));
