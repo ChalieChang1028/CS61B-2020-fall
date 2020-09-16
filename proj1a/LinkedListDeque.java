@@ -43,10 +43,7 @@ public class LinkedListDeque<T> {
     }
 
     public boolean isEmpty() {
-        if (size == 0) {
-            return true;
-        }
-        return false;
+        return size == 0;
     }
 
     public int size() {
@@ -63,9 +60,10 @@ public class LinkedListDeque<T> {
     }
 
     public T removeFirst() {
-        if (front == null) {
+        if (size == 0) {
             return null;
         }
+        size -= 1;
         Node ans = front;
         front = front.next;
         if (front != null) {
@@ -73,14 +71,14 @@ public class LinkedListDeque<T> {
         } else {
             back = null;
         }
-        size = Math.max(0, size - 1);
         return ans.val;
     }
 
     public T removeLast() {
-        if (back == null) {
+        if (size == 0) {
             return null;
         }
+        size -= 1;
         Node ans = back;
         back = back.pre;
         if (back != null) {
@@ -88,7 +86,6 @@ public class LinkedListDeque<T> {
         } else {
             front = null;
         }
-        size = Math.max(size - 1, 0);
         return ans.val;
     }
 
@@ -105,7 +102,7 @@ public class LinkedListDeque<T> {
     }
 
     private T getRhelper(int index, Node n) {
-        if (n == null) {
+        if (index >= size || index < 0) {
             return null;
         }
         if (index == 0) {

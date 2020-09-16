@@ -4,27 +4,27 @@ ArrayDeque:
 
 Q: Give an example of at least one idea from the staff solution that would have made your solution better (if any).
 
-A: 
+A: resize function and calling existing functions reduce a lot of work.
 
 Q: What's something you felt proud of in your code, if anything?
 
-A:
+A: I used 2 different ways to do resize.
 
 Q: What's something that was particularly inelegant in your code, if anything?
 
-A:
+A: nothing
 
 Q: What did you learn by talking to your partner about writing ArrayDeque?
 
-A:
+A: isEmpty can use just one sigle line.
 
 Q: What do you wish you would have known before writing ArrayDeque, if anything?
 
-A:
+A: nothing
 
 Q: If you wrote ArrayDeque again, what would you do differently, if anything?
 
-A:
+A: nothing
 
 -----
 
@@ -32,27 +32,27 @@ LinkedListDeque:
 
 Q: Give an example of at least one idea from the staff solution that would have made your solution better (if any).
 
-A: 
+A: better ways to implement removelast/removefirst using size.
 
 Q: What's something you felt proud of in your code, if anything?
 
-A:
+A: I didnt use sentinel node.
 
 Q: What's something that was particularly inelegant in your code, if anything?
 
-A:
+A: Didnt add edge cases for recursive get.
 
 Q: What did you learn by talking to your partner about writing LinkedListDeque?
 
-A:
+A: isEmpty has 1-line implementation
 
 Q: What do you wish you would have known before writing LinkedListDeque, if anything?
 
-A:
+A: 
 
 Q: If you wrote LinkedListDeque again, what would you do differently, if anything?
 
-A:
+A: nothing
 
 -----
 
@@ -60,4 +60,4 @@ Meta:
 
 Q: Did you like this design review process? Anything we should do differently next time?
 
-A: 
+A: I think this session is purely waste of time.
