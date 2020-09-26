@@ -81,10 +81,12 @@ public class ArrayRingBuffer<T> implements BoundedQueue<T> {
      * throw new RuntimeException("Ring buffer underflow").
      */
     @Override
-    public T peek() {
+    public T peek() throws RuntimeException {
         // TODO: Return the first item. None of your instance variables should
         //       change. Don't worry about throwing the RuntimeException until you
         //       get to task 4.
+        if (fillCount == 0)
+            throw new RuntimeException("Ring buffer underflow");
         return rb[first];
     }
 
@@ -99,10 +101,10 @@ public class ArrayRingBuffer<T> implements BoundedQueue<T> {
     }
 
     private  class ArrayRingBufferIterator implements Iterator<T> {
-        private int pos;
         private ArrayRingBuffer<T> arr;
         public ArrayRingBufferIterator () {
             int c = fillCount;
+            arr = new ArrayRingBuffer<>(c);
             for (int i = 0; i < c; i++) {
                 T f = dequeue();
                 arr.enqueue(f);
@@ -118,7 +120,7 @@ public class ArrayRingBuffer<T> implements BoundedQueue<T> {
         }
     }
 
-    public Iterator iterator() {
+    public Iterator<T> iterator() {
         return new ArrayRingBufferIterator();
     }
 
