@@ -1,9 +1,6 @@
 package es.datastructur.synthesizer;
 import java.util.Iterator;
 
-//TODO: Make sure to that this class and all of its methods are public
-//TODO: Make sure to add the override tag for all overridden methods
-//TODO: Make sure to make this class implement BoundedQueue<T>
 
 public class ArrayRingBuffer<T> implements BoundedQueue<T> {
     /* Index for the next dequeue or peek. */
@@ -19,8 +16,6 @@ public class ArrayRingBuffer<T> implements BoundedQueue<T> {
      * Create a new ArrayRingBuffer with the given capacity.
      */
     public ArrayRingBuffer(int capacity) {
-        // TODO: Create new array with capacity elements.
-        //       first, last, and fillCount should all be set to 0.
         first = 0;
         last = 0;
         fillCount = 0;
@@ -33,9 +28,6 @@ public class ArrayRingBuffer<T> implements BoundedQueue<T> {
      */
     @Override
     public void enqueue(T x) throws RuntimeException{
-        // TODO: Enqueue the item. Don't forget to increase fillCount and update
-        //       last. Don't worry about throwing the RuntimeException until you
-        //       get to task 4.
         if (fillCount >= capacity()) {
             throw new RuntimeException("Ring buffer overflow");
         }
@@ -50,9 +42,6 @@ public class ArrayRingBuffer<T> implements BoundedQueue<T> {
      */
     @Override
     public T dequeue() throws RuntimeException{
-        // TODO: Dequeue the first item. Don't forget to decrease fillCount and
-        //       update first. Don't worry about throwing the RuntimeException until you
-        //       get to task 4.
         if (fillCount == 0) {
             throw new RuntimeException("Ring Buffer underflow");
         }
@@ -62,6 +51,7 @@ public class ArrayRingBuffer<T> implements BoundedQueue<T> {
         return rb[oldf];
     }
 
+    @Override
     public boolean equals(Object o) {
         ArrayRingBuffer b = (ArrayRingBuffer) o;
         if (fillCount() != b.fillCount()) {
@@ -82,9 +72,6 @@ public class ArrayRingBuffer<T> implements BoundedQueue<T> {
      */
     @Override
     public T peek() throws RuntimeException {
-        // TODO: Return the first item. None of your instance variables should
-        //       change. Don't worry about throwing the RuntimeException until you
-        //       get to task 4.
         if (fillCount == 0)
             throw new RuntimeException("Ring buffer underflow");
         return rb[first];
@@ -120,6 +107,7 @@ public class ArrayRingBuffer<T> implements BoundedQueue<T> {
         }
     }
 
+    @Override
     public Iterator<T> iterator() {
         return new ArrayRingBufferIterator();
     }
