@@ -2,8 +2,6 @@ package hw2;
 
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
-import java.lang.reflect.WildcardType;
-
 public class Percolation {
     private int n, c, top, bot;
     private boolean[] matrix;
@@ -27,7 +25,7 @@ public class Percolation {
     }
 
     public void open(int row, int col) throws IndexOutOfBoundsException {
-        if (row< 0 || col < 0 || row >= n || col >= n) {
+        if (row < 0 || col < 0 || row >= n || col >= n) {
             throw new ArrayIndexOutOfBoundsException();
         }
         if (!isOpen(row, col)) {
@@ -70,9 +68,9 @@ public class Percolation {
         if (row < 0 || col < 0 || row >= n || col >= n) {
             throw new ArrayIndexOutOfBoundsException();
         }
-        return isOpen(row, col) &&
-                backwash.connected(top, to1D(row, col)) &&
-                u.connected(top, to1D(row, col));
+        return isOpen(row, col)
+                && backwash.connected(top, to1D(row, col))
+                && u.connected(top, to1D(row, col));
     }
 
     public int numberOfOpenSites() {
