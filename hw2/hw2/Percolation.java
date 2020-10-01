@@ -20,14 +20,6 @@ public class Percolation {
         matrix = new boolean[n * n + 1];
         u = new WeightedQuickUnionUF(n * n + 2);
         backwash = new WeightedQuickUnionUF(n * n + 1);
-
-        for (int i = 0; i < n; i++) {
-            backwash.union(top, i);
-            u.union(bot, n * (n - 1) + i);
-            for (int j = 0; j < n; j++) {
-                matrix[to1D(i, j)] = false;
-            }
-        }
     }
 
     private int to1D(int row, int col) {
@@ -38,43 +30,31 @@ public class Percolation {
         if (row< 0 || col < 0 || row >= n || col >= n) {
             throw new ArrayIndexOutOfBoundsException();
         }
-        if (!matrix[to1D(row, col)]) {
+        if (!isOpen(row, col)) {
             matrix[to1D(row, col)] = true;
             c++;
             if (row == 0) {
                 u.union(top, to1D(row, col));
+                backwash.union(top, to1D(row, col));
             }
-            if (row - 1 >= 0 && matrix[to1D(row - 1, col)]) {
+            if (row == n - 1) {
+                u.union(bot, to1D(row, col));
+            }
+            if (row - 1 >= 0 && isOpen(row - 1, col)) {
                 u.union(to1D(row, col), to1D(row - 1, col));
                 backwash.union(to1D(row, col), to1D(row - 1, col));
-                if (backwash.connected(top, to1D(row - 1, col))); {
-                    u.union(top, to1D(row, col));
-                    backwash.union(top, to1D(row, col));
-                }
             }
-            if (row + 1 < n && matrix[to1D(row + 1, col)]) {
+            if (row + 1 < n && isOpen(row + 1, col)) {
                 u.union(to1D(row, col), to1D(row + 1, col));
                 backwash.union(to1D(row, col), to1D(row + 1, col));
-                if (backwash.connected(top, to1D(row + 1, col))); {
-                    u.union(top, to1D(row, col));
-                    backwash.union(top, to1D(row, col));
-                }
             }
-            if (col - 1 >= 0 && matrix[to1D(row, col - 1)]) {
+            if (col - 1 >= 0 && isOpen(row, col - 1)) {
                 u.union(to1D(row, col), to1D(row, col - 1));
                 backwash.union(to1D(row, col), to1D(row, col - 1));
-                if (backwash.connected(top, to1D(row, col - 1))); {
-                    u.union(top, to1D(row, col));
-                    backwash.union(top, to1D(row, col));
-                }
             }
-            if (col + 1 < n && matrix[to1D(row, col + 1)]) {
+            if (col + 1 < n && isOpen(row, col + 1)) {
                 u.union(to1D(row, col), to1D(row, col + 1));
                 backwash.union(to1D(row, col), to1D(row, col + 1));
-                if (backwash.connected(top, to1D(row, col + 1))); {
-                    u.union(top, to1D(row, col));
-                    backwash.union(top, to1D(row, col));
-                }
             }
         }
     }
@@ -90,7 +70,9 @@ public class Percolation {
         if (row < 0 || col < 0 || row >= n || col >= n) {
             throw new ArrayIndexOutOfBoundsException();
         }
-        return isOpen(row, col) && backwash.connected(top, to1D(row, col));
+        return isOpen(row, col) &&
+                backwash.connected(top, to1D(row, col)) &&
+                u.connected(top, to1D(row, col));
     }
 
     public int numberOfOpenSites() {
@@ -101,4 +83,7 @@ public class Percolation {
         return u.connected(top, bot);
     }
 
+    public static void main(String[] args) {
+
+    }
 }
