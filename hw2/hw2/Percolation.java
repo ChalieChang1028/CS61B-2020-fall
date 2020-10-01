@@ -8,6 +8,7 @@ public class Percolation {
     private int n, c, top, bot;
     private boolean[] matrix;
     private WeightedQuickUnionUF u, backwash;
+
     public Percolation(int N) throws IllegalArgumentException {
         if (N <= 0) {
             throw new IllegalArgumentException("N cannot be smaller than 0!");
@@ -40,6 +41,9 @@ public class Percolation {
         if (!matrix[to1D(row, col)]) {
             matrix[to1D(row, col)] = true;
             c++;
+            if (row == 0) {
+                u.union(top, to1D(row, col));
+            }
             if (row - 1 >= 0 && matrix[to1D(row - 1, col)]) {
                 u.union(to1D(row, col), to1D(row - 1, col));
                 backwash.union(to1D(row, col), to1D(row - 1, col));
@@ -97,7 +101,4 @@ public class Percolation {
         return u.connected(top, bot);
     }
 
-    public static void main(String[] args) {
-
-    }
 }
