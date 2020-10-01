@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 
 public class UnionFind {
     int[] parent;
@@ -6,6 +5,9 @@ public class UnionFind {
     /* Creates a UnionFind data structure holding n vertices. Initially, all
        vertices are in disjoint sets. */
     public UnionFind(int n) {
+        if (n <= 0) {
+            throw new IllegalArgumentException();
+        }
         parent = new int[n];
         // set all the parents to be -1 to symbolize that they are disjoint
         for (int i = 0; i < n; i++) {
@@ -16,7 +18,7 @@ public class UnionFind {
     /* Throws an exception if v1 is not a valid vertex. */
     private void validate(int v1) {
         // TODO
-        if (v1 >= parent.length) {
+        if (v1 >= parent.length || v1 < 0) {
             throw new IllegalArgumentException();
         }
 
@@ -51,6 +53,9 @@ public class UnionFind {
         // TODO
         validate(v1);
         validate(v2);
+        if (find(v1) == find(v2)) {
+            return;
+        }
         if (sizeOf(v2) >= sizeOf(v1)) {
             int s = sizeOf(v1);
             int root = find(v2);
@@ -67,10 +72,10 @@ public class UnionFind {
     public int find(int v1) {
         // TODO
         validate(v1);
-        if (parent[v1] < 0) {
-            return v1;
+        while (parent[v1] >= 0) {
+            v1 = parent[v1];
         }
-        return find(parent[v1]);
+        return v1;
     }
 
 }
