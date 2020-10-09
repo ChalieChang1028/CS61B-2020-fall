@@ -1,0 +1,14 @@
+randomSpeedTest:
+length 10
+12000 records
+ULLMap: 1.06 s
+BSTMap: 0.03 s
+Built-in TreeMap: 0.03 s
+
+
+inOrderSpeedTest:
+12000 records
+ULLMap: 4.50 s
+BSTMap: 4.16 s
+Built-in TreeMap: 0.06 s
+Built-in HashMap: 0.05 s
