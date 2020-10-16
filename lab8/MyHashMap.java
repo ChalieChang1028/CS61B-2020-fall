@@ -65,10 +65,10 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
         if (key == null) {
             throw new IllegalArgumentException();
         }
-        if (table == null) {
+        int ind = hash(key, capacity);
+        if (table[ind] == null) {
             return null;
         }
-        int ind = hash(key, capacity);
         for (Entry<K, V> e : table[ind]) {
             if (key.equals(e.key)) {
                 return e.value;
