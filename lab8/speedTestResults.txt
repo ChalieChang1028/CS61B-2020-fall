@@ -1,0 +1,13 @@
+Random:
+length 100
+# 10000
+ULLMap: .44s
+MyHash: .02s
+Built-in: .01s
+
+InOrder:
+length 100
+# 10000
+ULLMap: .77s
+MyHash: .01s
+Built-in: .01s
