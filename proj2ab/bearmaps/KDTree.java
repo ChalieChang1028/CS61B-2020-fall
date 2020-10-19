@@ -64,11 +64,15 @@ public class KDTree implements PointSet {
 
         double toBest = Point.distance(best, p);
         if (n.orientation) {
-            if (Double.compare(Point.distance(p, new Point(p.getX(), n.point.getY())), toBest) < 0) {
+            if (Double.compare(Point.distance(p,
+                                    new Point(p.getX(), n.point.getY())),
+                                toBest) < 0) {
                 best = nearestHelper(bad, p, best);
             }
         } else {
-            if (Double.compare(Point.distance(p, new Point(n.point.getX(), p.getY())), toBest) < 0) {
+            if (Double.compare(Point.distance(p,
+                                    new Point(n.point.getX(), p.getY())),
+                                toBest) < 0) {
                 best = nearestHelper(bad, p, best);
             }
         }
