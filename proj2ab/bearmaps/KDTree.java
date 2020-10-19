@@ -1,77 +1,77 @@
 package bearmaps;
 import java.util.*;
 
-public class KDTree implements PointSet{
+public class KDTree implements PointSet {
     private class Node {
         private Point point;
+        private boolean orientation;
         private Node leftChild = null;
         private Node rightChild = null;
 
-        public Node(Point p) {
+        Node(Point p, boolean o) {
             point = p;
-        }
-
-        public boolean compare(Point p, int o) {
-            if (o % 2 == 0) {
-                return Double.compare(p.getX(), point.getX()) >= 0;
-            }
-            return Double.compare(p.getY(), point.getY()) >= 0;
-        }
-
-        public Node add(Node head, Point p, int orientation) {
-            if (head == null) {
-                return new Node(p);
-            }
-            if (head.compare(p, orientation)) {
-                head.rightChild = add(head.rightChild, p, orientation + 1);
-            } else {
-                head.leftChild = add(head.leftChild, p, orientation + 1);
-            }
-            return head;
-        }
-
-        public Node nearestHelper(Node head, Node best, Point p, int orientation) {
-            Node good, bad;
-            if (head == null) {
-                return best;
-            }
-            if (Point.distance(p, head.point) < Point.distance(p, best.point)) {
-                best = head;
-            }
-            if (head.compare(p, orientation)) {
-                good = head.rightChild;
-                bad = head.leftChild;
-            } else {
-                good = head.leftChild;
-                bad = head.rightChild;
-            }
-            best = nearestHelper(good, best, p, orientation + 1);
-            if (orientation % 2 == 0) {
-                if (Double.compare(Point.distance(p, new Point(best.point.getX(), p.getY()))
-                                    ,Point.distance(p, best.point)) < 0) {
-                    best = nearestHelper(bad, best, p,orientation + 1);
-                }
-            } else {
-                if (Double.compare(Point.distance(p, new Point(p.getX(), best.point.getY())),
-                        Point.distance(p, best.point)) < 0) {
-                    best = nearestHelper(bad, best, p, orientation + 1);
-                }
-            }
-            return best;
+            orientation = o;
         }
     }
 
     private Node head;
     public KDTree(List<Point> points) {
-        head = new Node(points.get(0));
-        for (int i = 1; i < points.size(); i++) {
-            head.add(head, points.get(i), 0);
+        for (Point p : points) {
+            head = add(head, p, false);
         }
+    }
+
+    private boolean compare(Point p, Point b, boolean o) {
+        if (o) {
+            return Double.compare(p.getY(), b.getY()) >= 0;
+        }
+        return Double.compare(p.getX(), b.getX()) >= 0;
+    }
+
+    private Node add(Node n, Point p, boolean orientation) {
+        if (n == null) {
+            return new Node(p, orientation);
+        }
+        if (compare(p, n.point, orientation)) {
+            n.rightChild = add(n.rightChild, p, !orientation);
+        } else {
+            n.leftChild = add(n.leftChild, p, !orientation);
+        }
+        return n;
     }
 
     @Override
     public Point nearest(double x, double y) {
-        Node best = head.nearestHelper(head, head, new Point(x, y), 0);
-        return best.point;
+        return nearestHelper(head, new Point(x, y), head.point);
+    }
+
+    private Point nearestHelper(Node n, Point p, Point best) {
+        Node good, bad;
+        if (n == null) {
+            return best;
+        }
+        if (Point.distance(p, n.point) < Point.distance(p, best)) {
+            best = n.point;
+        }
+        if (compare(p, n.point, n.orientation)) {
+            good = n.rightChild;
+            bad = n.leftChild;
+        } else {
+            good = n.leftChild;
+            bad = n.rightChild;
+        }
+        best = nearestHelper(good, p, best);
+
+        double toBest = Point.distance(best, p);
+        if (n.orientation) {
+            if (Double.compare(Point.distance(p, new Point(p.getX(), n.point.getY())), toBest) < 0) {
+                best = nearestHelper(bad, p, best);
+            }
+        } else {
+            if (Double.compare(Point.distance(p, new Point(n.point.getX(), p.getY())), toBest) < 0) {
+                best = nearestHelper(bad, p, best);
+            }
+        }
+        return best;
     }
 }

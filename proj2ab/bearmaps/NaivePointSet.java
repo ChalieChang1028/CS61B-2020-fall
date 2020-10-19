@@ -1,11 +1,11 @@
 package bearmaps;
 import java.util.*;
 
-public class NaivePointSet implements PointSet{
+public class NaivePointSet implements PointSet {
 
     private List<Point> points;
-    public NaivePointSet(List<Point> points) {
-        this.points = points;
+    public NaivePointSet(List<Point> point) {
+        this.points = point;
     }
 
     @Override
