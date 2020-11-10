@@ -84,11 +84,62 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
      */
     @Override
     public Map<String, Object> processRequest(Map<String, Double> requestParams, Response response) {
-        //System.out.println("yo, wanna know the parameters given by the web browser? They are:");
-        //System.out.println(requestParams);
+//        System.out.println("yo, wanna know the parameters given by the web browser? They are:");
+//        System.out.println(requestParams);
         Map<String, Object> results = new HashMap<>();
-        System.out.println("Since you haven't implemented RasterAPIHandler.processRequest, nothing is displayed in "
-                + "your browser.");
+//        System.out.println("Since you haven't implemented RasterAPIHandler.processRequest, nothing is displayed in "
+//                + "your browser.");
+        double lrlon = requestParams.get("lrlon");
+        double ullon = requestParams.get("ullon");
+        double width = requestParams.get("w");
+        double ullat = requestParams.get("ullat");
+        double lrlat = requestParams.get("lrlat");
+
+        if (Constants.ROOT_LRLAT < ullon || Constants.ROOT_LRLAT > ullat
+            || Constants.ROOT_ULLAT < lrlat || Constants.ROOT_ULLON > lrlon
+            || lrlon < ullon || ullat < lrlat) {
+            results.put("query_success", false);
+            return results;
+        }
+
+        results.put("query_success", true);
+
+        int depth = 0;
+        double maxLondpp = (lrlon - ullon) / width;
+        double londpp = (Constants.ROOT_LRLON - Constants.ROOT_ULLON) / Constants.TILE_SIZE;
+        while (londpp > maxLondpp && depth < 7) {
+            londpp /= 2;
+            depth += 1;
+        }
+        results.put("depth", depth);
+
+        int tiles = (int) Math.pow(2, depth);
+        double lonDist = (Constants.ROOT_LRLON - Constants.ROOT_ULLON) / tiles;
+        double latDist = (Constants.ROOT_ULLAT - Constants.ROOT_LRLAT) / tiles;
+        int x0 = (int) Math.abs((ullon - Constants.ROOT_ULLON) / lonDist);
+        int y0 = (int) Math.abs((ullat - Constants.ROOT_ULLAT) / latDist);
+        int x1 = (int) Math.abs((lrlon - Constants.ROOT_ULLON) / lonDist);
+        int y1 = (int) Math.abs((lrlat - Constants.ROOT_ULLAT) / latDist);
+
+        x0 = Math.min(x0, tiles - 1);
+        x1 = Math.max(x1, x0);
+        y0 = Math.min(y0, tiles - 1);
+        y1 = Math.max(y1, y0);
+
+        results.put("raster_ul_lon", Constants.ROOT_ULLON + x0 * lonDist);
+        results.put("raster_lr_lon", Constants.ROOT_ULLON + x1 * lonDist);
+        results.put("raster_ul_lat", Constants.ROOT_ULLAT + y0 * latDist);
+        results.put("raster_lr_lat", Constants.ROOT_ULLAT + y1 * latDist);
+
+        String[][] grid = new String[y1 - y0 + 1][x1 - x0 + 1];
+        for (int i = 0; i <= y1 - y0; i++) {
+            for (int j = 0; j <= x1 - x0; j++) {
+                grid[i][j] = "d" + depth + "_x" + (x0 + j) + "_y" + (y0 + i) + ".png";
+            }
+        }
+        results.put("render_grid", grid);
+
+
         return results;
     }
 
