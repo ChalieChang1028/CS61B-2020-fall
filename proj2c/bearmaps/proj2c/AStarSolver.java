@@ -24,13 +24,13 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
         Map<Vertex, Vertex> edge = new HashMap<>();
 
         distance.put(start, 0.0);
-        ExtrinsicMinPQ<Vertex> PQ = new DoubleMapPQ<>();
-        PQ.add(start, input.estimatedDistanceToGoal(start, end));
+        ExtrinsicMinPQ<Vertex> pq = new DoubleMapPQ<>();
+        pq.add(start, input.estimatedDistanceToGoal(start, end));
 
         Stopwatch timer = new Stopwatch();
-        while (PQ.size() > 0) {
+        while (pq.size() > 0) {
             // get to goal state
-            if (PQ.getSmallest().equals(end)) {
+            if (pq.getSmallest().equals(end)) {
                 ans = SolverOutcome.SOLVED;
                 Vertex current = end;
                 while (current != null) {
@@ -50,7 +50,7 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
             }
 
             // continue exploration
-            Vertex cur = PQ.removeSmallest();
+            Vertex cur = pq.removeSmallest();
             count += 1;
             for (WeightedEdge<Vertex> e : input.neighbors(cur)) {
                 Vertex tar = e.to();
@@ -58,11 +58,11 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
                     || distance.get(cur) + e.weight() < distance.get(tar)) {
                     distance.put(tar, distance.get(cur) + e.weight());
                     edge.put(tar, cur);
-                    if (PQ.contains(tar)) {
-                        PQ.changePriority(tar, distance.get(tar)
+                    if (pq.contains(tar)) {
+                        pq.changePriority(tar, distance.get(tar)
                                 + input.estimatedDistanceToGoal(tar, end));
                     } else {
-                        PQ.add(e.to(), distance.get(tar)
+                        pq.add(e.to(), distance.get(tar)
                                 + input.estimatedDistanceToGoal(tar, end));
                     }
                 }
