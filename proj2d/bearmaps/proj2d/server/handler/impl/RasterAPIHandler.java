@@ -121,15 +121,10 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         int x1 = (int) Math.abs((lrlon - Constants.ROOT_ULLON) / lonDist);
         int y1 = (int) Math.abs((lrlat - Constants.ROOT_ULLAT) / latDist);
 
-        x0 = Math.min(x0, tiles - 1);
-        x1 = Math.max(x1, x0);
-        y0 = Math.min(y0, tiles - 1);
-        y1 = Math.max(y1, y0);
-
         results.put("raster_ul_lon", Constants.ROOT_ULLON + x0 * lonDist);
-        results.put("raster_lr_lon", Constants.ROOT_ULLON + x1 * lonDist);
-        results.put("raster_ul_lat", Constants.ROOT_ULLAT + y0 * latDist);
-        results.put("raster_lr_lat", Constants.ROOT_ULLAT + y1 * latDist);
+        results.put("raster_lr_lon", Constants.ROOT_ULLON + (x1 + 1) * lonDist);
+        results.put("raster_ul_lat", Constants.ROOT_ULLAT - y0 * latDist);
+        results.put("raster_lr_lat", Constants.ROOT_ULLAT - (y1 + 1) * latDist);
 
         String[][] grid = new String[y1 - y0 + 1][x1 - x0 + 1];
         for (int i = 0; i <= y1 - y0; i++) {
