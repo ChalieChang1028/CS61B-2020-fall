@@ -110,7 +110,13 @@ public class Engine {
                 } else if (input.charAt(index) == 'l' || input.charAt(index) == 'L') {
                     loadFlag = true;
                     if (load(false)) {
-                      return new TETile[WIDTH][HEIGHT];
+                      worldFrame = new TETile[WIDTH][HEIGHT];
+                        for (int i = 0; i < WIDTH; i++) {
+                            for (int j = 0; j < HEIGHT; j++) {
+                                worldFrame[i][j] = Tileset.NOTHING;
+                            }
+                        }
+                        return worldFrame;
                     }
                     index++;
                 } else if (input.charAt(index) == 'S' || input.charAt(index) == 's') {
