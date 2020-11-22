@@ -4,10 +4,12 @@ package byow.Core;
 import byow.TileEngine.TERenderer;
 import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
+import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Random;
@@ -70,7 +72,7 @@ public class Engine {
 
 
     public TETile[][] interactWithInputString(String input)
-    throws Exception {
+    throws IOException, InterruptedException {
         // passed in as an argument, and return a 2D tile representation of the
         // world that would have been drawn if the same inputs had been given
         // to interactWithKeyboard().
@@ -78,7 +80,6 @@ public class Engine {
         // See proj3.byow.InputDemo for a demo of how you can make a nice clean interface
         // that works for many different input types.
 
-        try {
         int index = 0;
         seed = 0;
 
@@ -86,48 +87,44 @@ public class Engine {
             return null;
         }
 
-        while (index < input.length()) {
-            if (input.charAt(index) == 'N' || input.charAt(index) == 'n') {
-                index++;
-                while ((input.charAt(index) >= '0' && input.charAt(index) <= '9')
-                        && (input.charAt(index) != 'S' || input.charAt(index) != 's')) {
-                    seed = seed * 10 + (input.charAt(index) - 48);
+            while (index < input.length()) {
+                if (input.charAt(index) == 'N' || input.charAt(index) == 'n') {
+                    index++;
+                    while ((input.charAt(index) >= '0' && input.charAt(index) <= '9')
+                            && (input.charAt(index) != 'S' || input.charAt(index) != 's')) {
+                        seed = seed * 10 + (input.charAt(index) - 48);
+                        index++;
+                    }
+                    index++;
+                    r = new Random(seed);
+                    worldFrame = new BSP(WIDTH, HEIGHT, r).createLeaves();
+                    p = new Player(WIDTH, HEIGHT, worldFrame, r);
+                    p.addPlayer();
+                } else if (input.charAt(index) == 'W' || input.charAt(index) == 'w'
+                        || input.charAt(index) == 'S' || input.charAt(index) == 's'
+                        || input.charAt(index) == 'A' || input.charAt(index) == 'a'
+                        || input.charAt(index) == 'D' || input.charAt(index) == 'd') {
+                    p.move(input.charAt(index));
+                    index++;
+                } else if (input.charAt(index) == 'l' || input.charAt(index) == 'L') {
+                    loadFlag = true;
+                    load(false);
+                    index++;
+                } else if (input.charAt(index) == 'S' || input.charAt(index) == 's') {
+                    save();
+                    index++;
+                } else if (input.charAt(index) == ':' && (input.charAt(index + 1) == 'q'
+                        || input.charAt(index + 1) == 'Q')) {
+                    save();
+                    break;
+                } else if (input.charAt(index) == 'R' || (input.charAt(index) == 'r')) {
+                    load(true);
+                    index++;
+                } else {
                     index++;
                 }
-                index++;
-                r  = new Random(seed);
-                worldFrame = new BSP(WIDTH, HEIGHT, r).createLeaves();
-                p = new Player(WIDTH, HEIGHT, worldFrame, r);
-                p.addPlayer();
-            } else if (input.charAt(index) == 'W' || input.charAt(index) == 'w'
-                    || input.charAt(index) == 'S' || input.charAt(index) == 's'
-                    || input.charAt(index) == 'A' || input.charAt(index) == 'a'
-                    || input.charAt(index) == 'D' || input.charAt(index) == 'd') {
-                p.move(input.charAt(index));
-                index++;
-            } else if (input.charAt(index) == 'l' || input.charAt(index) == 'L') {
-                loadFlag = true;
-                load(false);
-                index++;
-            } else if (input.charAt(index) == 'S' || input.charAt(index) == 's') {
-                save();
-                index++;
-            } else if (input.charAt(index) == ':' && (input.charAt(index + 1) == 'q'
-                    || input.charAt(index + 1) == 'Q')) {
-                save();
-                break;
-            } else if (input.charAt(index) == 'R' || (input.charAt(index) == 'r')){
-                load(true);
-                index++;
-            } else {
-                index++;
             }
-        }
-
-        return worldFrame;
-      } catch (Exception e) {
-        throw new Exception("there is a error");
-      }
+            return worldFrame;
     }
 
     public void initializeRenderer() {
@@ -146,7 +143,7 @@ public class Engine {
 
 
     private void load(boolean replay)
-            throws Exception {
+            throws IOException, InterruptedException {
         File inputFile = new File("fa20-proj3-g488\\proj3\\byow\\Core\\saved.txt");
         Scanner reader = new Scanner(inputFile);
         long prevSeed = reader.nextLong();
@@ -171,7 +168,7 @@ public class Engine {
     }
 
     public void save()
-            throws Exception {
+    throws IOException {
         File outputFile = new File("fa20-proj3-g488\\proj3\\byow\\Core\\saved.txt");
         PrintWriter writer = new PrintWriter(outputFile);
         String prevPath = "";
