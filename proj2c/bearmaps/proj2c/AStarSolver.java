@@ -43,7 +43,7 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
             }
 
             // timeout
-            if (timer.elapsedTime() > timeout) {
+            if (timer.elapsedTime() > timeout) {    
                 time = timer.elapsedTime();
                 ans = SolverOutcome.TIMEOUT;
                 return;

@@ -1,4 +1,4 @@
-package com.javacodegeeks.snipppets.desktop;
+//package com.javacodegeeks.snipppets.desktop;
 
 import java.awt.BorderLayout;
 import java.awt.Container;

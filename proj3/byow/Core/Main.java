@@ -5,12 +5,14 @@ package byow.Core;
  *  in either keyboard or input string mode.
  */
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    throws Exception{
         if (args.length > 1) {
             System.out.println("Can only have one argument - the input string");
             System.exit(0);
         } else if (args.length == 1) {
             Engine engine = new Engine();
+            System.out.println("Running with arg " + args[0]);
             engine.interactWithInputString(args[0]);
             System.out.println(engine.toString());
         } else {
