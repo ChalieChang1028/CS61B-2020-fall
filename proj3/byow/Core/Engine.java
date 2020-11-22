@@ -7,6 +7,7 @@ import byow.TileEngine.Tileset;
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
 
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.FileNotFoundException;
@@ -109,15 +110,16 @@ public class Engine {
                     index++;
                 } else if (input.charAt(index) == 'l' || input.charAt(index) == 'L') {
                     loadFlag = true;
-                    if (load(false)) {
-                      worldFrame = new TETile[WIDTH][HEIGHT];
-                        for (int i = 0; i < WIDTH; i++) {
-                            for (int j = 0; j < HEIGHT; j++) {
-                                worldFrame[i][j] = Tileset.NOTHING;
-                            }
-                        }
-                        return worldFrame;
-                    }
+                    load(false);
+//                    if (load(false)) {
+//                        worldFrame = new TETile[WIDTH][HEIGHT];
+//                        for (int i = 0; i < WIDTH; i++) {
+//                            for (int j = 0; j < HEIGHT; j++) {
+//                                worldFrame[i][j] = Tileset.NOTHING;
+//                            }
+//                        }
+//                        return worldFrame;
+//                    }
                     index++;
                 } else if (input.charAt(index) == 'S' || input.charAt(index) == 's') {
                     save();
@@ -149,13 +151,13 @@ public class Engine {
         p.move(c);
     }
 
-    private boolean load(boolean replay) {
+    private void load(boolean replay) {
         try {
-            File inputFile = new File("fa20-proj3-g488\\proj3\\byow\\Core\\saved.txt");
+            File inputFile = new File("saved.txt");
             Scanner reader = new Scanner(inputFile);
-            if (!reader.hasNext()) {
-                return true;
-            }
+//            if (!reader.hasNext()) {
+//                return true;
+//            }
 
             prevSeed = reader.nextLong();
             if (reader.hasNext())
@@ -185,12 +187,12 @@ public class Engine {
             System.out.println("load error");
         }
 
-        return false;
+//        return false;
     }
 
     public void save() {
         try {
-            File outputFile = new File("fa20-proj3-g488\\proj3\\byow\\Core\\saved.txt");
+            File outputFile = new File("saved.txt");
             PrintWriter writer = new PrintWriter(outputFile);
             if (!outputFile.createNewFile()) {
 //                if (loadFlag) {
@@ -222,41 +224,50 @@ public class Engine {
         Engine engine = new Engine();
         engine.initializeRenderer();
 
+//        TETile[][] ans = engine.interactWithInputString("l");
+//        if (ans == null)
+//            return;
+//        engine.renderWorld();
 
 //            engine.interactWithInputString("N19980711SDSSSSSSSSSDDD:Q");
 //            engine.renderWorld();
-
-        engine.interactWithInputString("N19921321321380711S:Q");
-        engine.renderWorld();
-        Thread.sleep(500);
-
-        engine.interactWithInputString("L:Q");
-        Thread.sleep(500);
-        System.out.println("phase1");
-
-        engine.interactWithInputString("L:Q");
-        Thread.sleep(500);
-        System.out.println("phase2");
-        engine.renderWorld();
-
-        engine.interactWithInputString("LDSS:Q");
-        Thread.sleep(500);
-        System.out.println("phase2");
-        engine.renderWorld();
-
-        engine.interactWithInputString("LSSS:Q");
-        Thread.sleep(500);
-        System.out.println("phase2");
-        engine.renderWorld();
-
-        engine.interactWithInputString("LSSSSD:Q");
-        System.out.println("phase3");
+//
+        engine.interactWithInputString("n7193300625454684331saaawasdaawdwsd");
         engine.renderWorld();
         Thread.sleep(1000);
 
-        engine.interactWithInputString("LDD:Q");
-        System.out.println("phase4");
+        engine.interactWithInputString("n7193300625454684331saaawasdaawd:q");
         engine.renderWorld();
+        Thread.sleep(1000);
+//
+        engine.interactWithInputString("Lwsd");
+        engine.renderWorld();
+        Thread.sleep(1000);
+        System.out.println("phase1");
+//
+//        engine.interactWithInputString("L:Q");
+//        Thread.sleep(500);
+//        System.out.println("phase2");
+//        engine.renderWorld();
+//
+//        engine.interactWithInputString("LDSS:Q");
+//        Thread.sleep(500);
+//        System.out.println("phase2");
+//        engine.renderWorld();
+//
+//        engine.interactWithInputString("LSSS:Q");
+//        Thread.sleep(500);
+//        System.out.println("phase2");
+//        engine.renderWorld();
+//
+//        engine.interactWithInputString("LSSSSD:Q");
+//        System.out.println("phase3");
+//        engine.renderWorld();
+//        Thread.sleep(1000);
+//
+//        engine.interactWithInputString("LDD:Q");
+//        System.out.println("phase4");
+//        engine.renderWorld();
 
         //engine.load(false);
         //System.out.print("hello");
