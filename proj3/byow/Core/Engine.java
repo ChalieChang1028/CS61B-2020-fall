@@ -71,8 +71,7 @@ public class Engine {
      */
 
 
-    public TETile[][] interactWithInputString(String input)
-    throws IOException, InterruptedException {
+    public TETile[][] interactWithInputString(String input) {
         // passed in as an argument, and return a 2D tile representation of the
         // world that would have been drawn if the same inputs had been given
         // to interactWithKeyboard().
@@ -142,50 +141,55 @@ public class Engine {
 
 
 
-    private void load(boolean replay)
-            throws IOException, InterruptedException {
-        File inputFile = new File("fa20-proj3-g488\\proj3\\byow\\Core\\saved.txt");
-        Scanner reader = new Scanner(inputFile);
-        long prevSeed = reader.nextLong();
-        String prevPath = reader.next();
-        if (replay) {
-            String currentPath = p.getPath();
-            interactWithInputString("N" + prevSeed + "S");
-            renderWorld();
-            int ind = 0;
-            while (ind < prevPath.length()) {
-                p.move(prevPath.charAt(ind));
+    private void load(boolean replay) {
+        try {
+            File inputFile = new File("fa20-proj3-g488\\proj3\\byow\\Core\\saved.txt");
+            Scanner reader = new Scanner(inputFile);
+            long prevSeed = reader.nextLong();
+            String prevPath = reader.next();
+            if (replay) {
+                String currentPath = p.getPath();
+                interactWithInputString("N" + prevSeed + "S");
                 renderWorld();
-                Thread.sleep(100);
-                ind++;
+                int ind = 0;
+                while (ind < prevPath.length()) {
+                    p.move(prevPath.charAt(ind));
+                    renderWorld();
+                    Thread.sleep(100);
+                    ind++;
+                }
+                Thread.sleep(2000);
+                interactWithInputString("N" + seed + "S" + currentPath);
+                renderWorld();
+            } else {
+                interactWithInputString("N" + prevSeed + "S" + prevPath);
             }
-            Thread.sleep(2000);
-            interactWithInputString("N" + seed + "S" + currentPath);
-            renderWorld();
-        } else {
-            interactWithInputString("N" + prevSeed + "S" + prevPath);
+        } catch (IOException | InterruptedException e) {
+            System.out.println("load error");
         }
     }
 
-    public void save()
-    throws IOException {
-        File outputFile = new File("fa20-proj3-g488\\proj3\\byow\\Core\\saved.txt");
-        PrintWriter writer = new PrintWriter(outputFile);
-        String prevPath = "";
-        if (!outputFile.createNewFile()) {
-            if (loadFlag) {
-                Scanner reader = new Scanner(outputFile);
-                seed = reader.nextLong();
-                prevPath = reader.next();
+    public void save() {
+        try {
+            File outputFile = new File("fa20-proj3-g488\\proj3\\byow\\Core\\saved.txt");
+            PrintWriter writer = new PrintWriter(outputFile);
+            String prevPath = "";
+            if (!outputFile.createNewFile()) {
+                if (loadFlag) {
+                    Scanner reader = new Scanner(outputFile);
+                    seed = reader.nextLong();
+                    prevPath = reader.next();
+                } else {
+                    outputFile.delete();
+                    outputFile.createNewFile();
+                }
             }
-            else {
-                outputFile.delete();
-                outputFile.createNewFile();
-            }
+            writer.write(seed + " ");
+            writer.write(prevPath + p.getPath());
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("save error");
         }
-        writer.write(seed + " ");
-        writer.write(prevPath + p.getPath());
-        writer.close();
     }
 
     public static void main(String[] args)
