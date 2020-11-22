@@ -159,6 +159,7 @@ public class Engine {
 //                return true;
 //            }
 
+            String sed = reader.next();
             prevSeed = reader.nextLong();
             if (reader.hasNext())
                 prevPath = reader.next();
