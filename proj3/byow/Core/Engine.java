@@ -110,7 +110,7 @@ public class Engine {
                 } else if (input.charAt(index) == 'l' || input.charAt(index) == 'L') {
                     loadFlag = true;
                     if (load(false)) {
-                        System.exit(0);
+                      return new TETile[WIDTH][HEIGHT];
                     }
                     index++;
                 } else if (input.charAt(index) == 'S' || input.charAt(index) == 's') {
