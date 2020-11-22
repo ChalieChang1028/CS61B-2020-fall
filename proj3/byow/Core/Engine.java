@@ -78,6 +78,7 @@ public class Engine {
         // See proj3.byow.InputDemo for a demo of how you can make a nice clean interface
         // that works for many different input types.
 
+        try {
         int index = 0;
         seed = 0;
 
@@ -124,6 +125,9 @@ public class Engine {
         }
 
         return worldFrame;
+      } catch (Exception e) {
+        throw new Exception("there is a error");
+      }
     }
 
     public void initializeRenderer() {
