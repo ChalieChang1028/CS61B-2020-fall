@@ -28,7 +28,9 @@ public class Engine {
     private Player p;
 
     private long seed;
-    private boolean loadFlag;
+    private boolean loadFlag = false;
+    private String prevPath = "";
+    private long prevSeed;
 
 
 
@@ -139,14 +141,14 @@ public class Engine {
         p.move(c);
     }
 
-
-
     private void load(boolean replay) {
         try {
-            File inputFile = new File("saved.txt");
+            File inputFile = new File("fa20-proj3-g488\\proj3\\byow\\Core\\saved.txt");
             Scanner reader = new Scanner(inputFile);
-            long prevSeed = reader.nextLong();
-            String prevPath = reader.next();
+            prevSeed = reader.nextLong();
+            if (reader.hasNext())
+                prevPath = reader.next();
+
             if (replay) {
                 String currentPath = p.getPath();
                 interactWithInputString("N" + prevSeed + "S");
@@ -161,9 +163,11 @@ public class Engine {
                 Thread.sleep(2000);
                 interactWithInputString("N" + seed + "S" + currentPath);
                 renderWorld();
+
             } else {
                 interactWithInputString("N" + prevSeed + "S" + prevPath);
             }
+
         } catch (IOException | InterruptedException e) {
             System.out.println("load error");
         }
@@ -171,21 +175,27 @@ public class Engine {
 
     public void save() {
         try {
-            File outputFile = new File("saved.txt");
+            File outputFile = new File("fa20-proj3-g488\\proj3\\byow\\Core\\saved.txt");
             PrintWriter writer = new PrintWriter(outputFile);
-            String prevPath = "";
             if (!outputFile.createNewFile()) {
-                if (loadFlag) {
-                    Scanner reader = new Scanner(outputFile);
-                    seed = reader.nextLong();
-                    prevPath = reader.next();
-                } else {
-                    outputFile.delete();
-                    outputFile.createNewFile();
-                }
+//                if (loadFlag) {
+//                    Scanner reader = new Scanner(outputFile);
+//                    seed = reader.nextLong();
+//                    prevPath = reader.next();
+//                } else {
+//                    outputFile.delete();
+//                    outputFile.createNewFile();
+//                }
+                outputFile.delete();
+                outputFile.createNewFile();
             }
-            writer.write(seed + " ");
-            writer.write(prevPath + p.getPath());
+            if (loadFlag) {
+                writer.write(prevSeed + " ");
+                writer.write(prevPath + p.getPath());
+            } else {
+                writer.write(seed + " ");
+                writer.write(p.getPath());
+            }
             writer.close();
         } catch (IOException e) {
             System.out.println("save error");
@@ -196,23 +206,57 @@ public class Engine {
             throws Exception {
         Engine engine = new Engine();
         engine.initializeRenderer();
-        //engine.interactWithInputString("N19980711SWWSSAADDR");
-        engine.load(false);
-        //System.out.print("hello");
-        engine.renderWorld();
-//        //engine.save();
 
-        char input = 0;
-        while (input != 'q') {
-            if (StdDraw.hasNextKeyTyped()) {
-                input = StdDraw.nextKeyTyped();
-                engine.move(input);
-                engine.renderWorld();
-            }
-            Thread.sleep(500);
-        }
-        engine.save();
+//        engine.interactWithInputString("N19980711SDSSSSSSSSSDDD:Q");
+//        engine.renderWorld();
+
+        engine.interactWithInputString("N19980711S:Q");
+        engine.renderWorld();
+        Thread.sleep(500);
+
+        engine.interactWithInputString("L:Q");
+        Thread.sleep(500);
+        System.out.println("phase1");
+
+
+        engine.interactWithInputString("L:Q");
+        Thread.sleep(500);
+        System.out.println("phase2");
+        engine.renderWorld();
+
+        engine.interactWithInputString("LDSSSSSSSSSD:Q");
+        System.out.println("phase3");
+        engine.renderWorld();
+        Thread.sleep(1000);
+
+
+        engine.interactWithInputString("LDD:Q");
+        System.out.println("phase4");
+        engine.renderWorld();
+
+
+
+
+        //engine.load(false);
+        //System.out.print("hello");
+
+
+//        Random r = new Random();
+//        while (true) {
+//            engine.interactWithInputString("N" + r.nextLong() + "SWSSSADDA:Q");
+//        }
+        //engine.save();
+//
+//        char input = 0;
+//        while (input != 'q') {
+//            if (StdDraw.hasNextKeyTyped()) {
+//                input = StdDraw.nextKeyTyped();
+//                engine.move(input);
+//                engine.renderWorld();
+//            }
+//            Thread.sleep(500);
+//        }
+//        engine.save();
         System.out.println("done");
-        return;
     }
 }
