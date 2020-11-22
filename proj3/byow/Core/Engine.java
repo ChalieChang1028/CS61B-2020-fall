@@ -143,7 +143,7 @@ public class Engine {
 
     private void load(boolean replay) {
         try {
-            File inputFile = new File("fa20-proj3-g488\\proj3\\byow\\Core\\saved.txt");
+            File inputFile = new File("saved.txt");
             Scanner reader = new Scanner(inputFile);
             long prevSeed = reader.nextLong();
             String prevPath = reader.next();
@@ -171,7 +171,7 @@ public class Engine {
 
     public void save() {
         try {
-            File outputFile = new File("fa20-proj3-g488\\proj3\\byow\\Core\\saved.txt");
+            File outputFile = new File("saved.txt");
             PrintWriter writer = new PrintWriter(outputFile);
             String prevPath = "";
             if (!outputFile.createNewFile()) {

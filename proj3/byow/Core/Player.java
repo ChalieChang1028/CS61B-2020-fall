@@ -31,7 +31,7 @@ public class Player {
                     break;
                 }
             }
-            if (worldFrame[x][y] == Tileset.FLOOR) {
+            if (y < worldHeight && worldFrame[x][y] == Tileset.FLOOR) {
                 break;
             }
         }
