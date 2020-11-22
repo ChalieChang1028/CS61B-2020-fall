@@ -200,9 +200,9 @@ public class Engine {
 //                renderWorld();
 //
 //            } else {
-                interactWithInputString("N" + prevSeed + "S" + prevPath);
+              reader.close();
+              interactWithInputString("N" + prevSeed + "S" + prevPath);
 //            }
-            reader.close();
         } catch (IOException e) {
             System.out.println("load error");
         }
@@ -217,14 +217,10 @@ public class Engine {
 
             if (loadFlag) {
                 writer.println(prevSeed);
-                writer.flush();
                 writer.println(prevPath + player.getPath());
-                writer.flush();
             } else {
                 writer.println(seed);
-                writer.flush();
                 writer.println(player.getPath());
-                writer.flush();
             }
             writer.close();
         } catch (IOException e) {
