@@ -32,6 +32,7 @@ public class Engine {
     private boolean loadFlag = false;
     private String prevPath = "";
     private long prevSeed;
+    private String filepath;
 
 
 
@@ -153,14 +154,13 @@ public class Engine {
 
     private void load(boolean replay) {
         try {
-            File inputFile = new File("saved.txt");
+            File inputFile = new File(filepath);
             Scanner reader = new Scanner(inputFile);
 //            if (!reader.hasNext()) {
 //                return true;
 //            }
 
-            String Seed = reader.next();
-            System.out.println(Seed);
+            prevSeed = reader.nextLong();
             if (reader.hasNext())
                 prevPath = reader.next();
 
@@ -194,7 +194,8 @@ public class Engine {
     public void save() {
         try {
             File outputFile = new File("saved.txt");
-            PrintWriter writer = new PrintWriter(outputFile);
+            filepath = outputFile.getAbsolutePath();
+            PrintWriter writer = new PrintWriter(outputFile,"UTF-8");
             if (!outputFile.createNewFile()) {
 //                if (loadFlag) {
 //                    Scanner reader = new Scanner(outputFile);
