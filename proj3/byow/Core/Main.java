@@ -6,16 +6,14 @@ package byow.Core;
  */
 public class Main {
     public static void main(String[] args)
-    throws Exception{
+        throws Exception {
         if (args.length > 1) {
             System.out.println("Can only have one argument - the input string");
             System.exit(0);
         } else if (args.length == 1) {
             Engine engine = new Engine();
             System.out.println("Running with arg " + args[0]);
-            TETile[][] ans = engine.interactWithInputString(args[0]);
-            if (ans == null)
-                return;
+            engine.interactWithInputString(args[0]);
             System.out.println(engine.toString());
         } else {
             Engine engine = new Engine();

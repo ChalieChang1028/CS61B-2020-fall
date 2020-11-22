@@ -4,13 +4,10 @@ package byow.Core;
 import byow.TileEngine.TERenderer;
 import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
-import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
 
-import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Random;
@@ -24,21 +21,34 @@ public class Engine {
     public static final int WIDTH = 80;
     public static final int HEIGHT = 30;
     public TETile[][] worldFrame;
-    private TERenderer renderer;
-    Random r;
-    private Player p;
-
+    Random randomNumberGen;
+    private Player player;
     private long seed;
-    private boolean loadFlag = false;
+    private boolean seedInput = false;
+    private boolean seedFinalized = false;
+    private boolean quitPrimed = false;
+    private boolean playerControl = false;
+    private StringBuilder inputHistory;
+    private boolean quit;
+    private boolean graphics;
+    private GraphicsEngine gEngine;
+    private String currentMenu;
+
     private String prevPath = "";
     private long prevSeed;
+    private boolean loadFlag = false;
 
-
-
-    //public Player p;
 
     public Engine() {
-        worldFrame = new TETile[WIDTH][HEIGHT];
+        seed = 0;
+        inputHistory = new StringBuilder();
+        quit = false;
+    }
+    public Engine(boolean graphics) {
+        this.graphics = graphics;
+        seed = 0;
+        inputHistory = new StringBuilder();
+        quit = false;
     }
 
     /**
@@ -46,9 +56,31 @@ public class Engine {
      * including inputs from the main menu.
      */
     public void interactWithKeyboard() {
+        if (graphics) {
+            currentMenu = "Main";
+            gEngine = new GraphicsEngine(Engine.WIDTH, Engine.HEIGHT, this);
+            graphicalGameLoop();
+        }
+        gameLoop();
+    }
 
+    private void gameLoop() {
+        while (!quit) {
+            if (StdDraw.hasNextKeyTyped()) {
+                String input = Character.toString(StdDraw.nextKeyTyped()).toLowerCase();
+                inputHandler(input.charAt(0));
+            }
+        }
+    }
 
-
+    private void graphicalGameLoop() {
+        while (!quit) {
+            gEngine.gameLoopHook();
+            if (gEngine.hasNextKeyTyped()) {
+                String input = Character.toString(gEngine.nextKeyTyped()).toLowerCase();
+                inputHandler(input.charAt(0));
+            }
+        }
     }
 
     /**
@@ -72,83 +104,72 @@ public class Engine {
      * @param input the input string to feed to your program
      * @return the 2D TETile[][] representing the state of the world
      */
-
-
     public TETile[][] interactWithInputString(String input) {
-        // passed in as an argument, and return a 2D tile representation of the
-        // world that would have been drawn if the same inputs had been given
-        // to interactWithKeyboard().
-        //
-        // See proj3.byow.InputDemo for a demo of how you can make a nice clean interface
-        // that works for many different input types.
-
-        int index = 0;
-        seed = 0;
 
         if (input == null) {
             return null;
         }
+        input = input.toLowerCase();
+        for (int i = 0; i < input.length(); i++) {
+            inputHandler(input.charAt(i));
+        }
+        return worldFrame;
+    }
 
-            while (index < input.length()) {
-                if (input.charAt(index) == 'N' || input.charAt(index) == 'n') {
-                    index++;
-                    while ((input.charAt(index) >= '0' && input.charAt(index) <= '9')
-                            && (input.charAt(index) != 'S' || input.charAt(index) != 's')) {
-                        seed = seed * 10 + (input.charAt(index) - 48);
-                        index++;
-                    }
-                    index++;
-                    r = new Random(seed);
-                    worldFrame = new BSP(WIDTH, HEIGHT, r).createLeaves();
-                    p = new Player(WIDTH, HEIGHT, worldFrame, r);
-                    p.addPlayer();
-                } else if (input.charAt(index) == 'W' || input.charAt(index) == 'w'
-                        || input.charAt(index) == 'S' || input.charAt(index) == 's'
-                        || input.charAt(index) == 'A' || input.charAt(index) == 'a'
-                        || input.charAt(index) == 'D' || input.charAt(index) == 'd') {
-                    p.move(input.charAt(index));
-                    index++;
-                } else if (input.charAt(index) == 'l' || input.charAt(index) == 'L') {
-                    loadFlag = true;
-                    load(false);
-//                    if (load(false)) {
-//                        worldFrame = new TETile[WIDTH][HEIGHT];
-//                        for (int i = 0; i < WIDTH; i++) {
-//                            for (int j = 0; j < HEIGHT; j++) {
-//                                worldFrame[i][j] = Tileset.NOTHING;
-//                            }
-//                        }
-//                        return worldFrame;
-//                    }
-                    index++;
-                } else if (input.charAt(index) == 'S' || input.charAt(index) == 's') {
-                    save();
-                    index++;
-                } else if (input.charAt(index) == ':' && (input.charAt(index + 1) == 'q'
-                        || input.charAt(index + 1) == 'Q')) {
-                    save();
-                    break;
-                } else if (input.charAt(index) == 'R' || (input.charAt(index) == 'r')) {
-                    load(true);
-                    index++;
-                } else {
-                    index++;
-                }
+    public void inputHandler(char input)
+    {
+        inputHistory.append(input);
+        if (seedInput) {
+            seedHandler(input);
+        } else if (!seedFinalized) {
+            if (input == 'n') {
+                seedInput = true;
+                currentMenu = "SeedInput";
+            } else if (input == 'l') {
+                loadFlag = true;
+                load(false);
+            } else if (input == 'r') {
+                //replay();
             }
-            return worldFrame;
+        } else if (playerControl) {
+            if (input == 'w' || input == 'a' || input == 's' || input == 'd') {
+                player.move(input);
+            } else if (input == ':' && !quitPrimed) {
+                quitPrimed = true;
+            } else if (input == 'q' && quitPrimed) {
+                save();
+                quit = true;
+            }
+        }
     }
 
-    public void initializeRenderer() {
-        renderer = new TERenderer();
-        renderer.initialize(WIDTH, HEIGHT);
+    private void seedHandler(char input) {
+        if (input == 's') {
+            seedInput = false;
+            seedFinalized = true;
+            generateWorld();
+        } else if (input >= '0' && input <= '9') {
+            seed = seed * 10 + (input - 48);
+        }
     }
 
-    public void renderWorld() {
-        renderer.renderFrame(worldFrame);
+    private void generateWorld() {
+        randomNumberGen = new Random(seed);
+        worldFrame = new BSP(WIDTH, HEIGHT, randomNumberGen).createLeaves();
+        player = new Player(WIDTH, HEIGHT, worldFrame, randomNumberGen);
+        player.addPlayer();
+        playerControl = true;
+        currentMenu = "Overworld";
     }
 
-    public void move(char c) {
-        p.move(c);
+    public long getSeed() {
+        return seed;
+    }
+
+
+
+    public String getCurrentMenu() {
+        return currentMenu;
     }
 
     private void load(boolean replay) {
@@ -158,35 +179,31 @@ public class Engine {
 //            if (!reader.hasNext()) {
 //                return true;
 //            }
-            String sed;
-            if (!reader.hasNextLine())
-              sed = reader.nextLine();
 
             prevSeed = reader.nextLong();
             if (reader.hasNext())
                 prevPath = reader.next();
-
-            if (replay) {
-                String currentPath = p.getPath();
-                interactWithInputString("N" + prevSeed + "S");
-                renderWorld();
-                int ind = 0;
-                while (ind < prevPath.length()) {
-                    p.move(prevPath.charAt(ind));
-                    renderWorld();
-                    Thread.sleep(100);
-                    ind++;
-                }
-                Thread.sleep(2000);
-                interactWithInputString("N" + seed + "S" + currentPath);
-                renderWorld();
-
-            } else {
+//
+//            if (replay) {
+//                String currentPath = player.getPath();
+//                interactWithInputString("N" + prevSeed + "S");
+//                renderWorld();
+//                int ind = 0;
+//                while (ind < prevPath.length()) {
+//                    player.move(prevPath.charAt(ind));
+//                    renderWorld();
+//                    Thread.sleep(100);
+//                    ind++;
+//                }
+//                Thread.sleep(2000);
+//                interactWithInputString("N" + seed + "S" + currentPath);
+//                renderWorld();
+//
+//            } else {
                 interactWithInputString("N" + prevSeed + "S" + prevPath);
-            }
+//            }
             reader.close();
-
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             System.out.println("load error");
         }
 
@@ -197,24 +214,22 @@ public class Engine {
         try {
             File outputFile = new File("saved.txt");
             PrintWriter writer = new PrintWriter(outputFile,"UTF-8");
-            if (!outputFile.createNewFile()) {
-//                if (loadFlag) {
-//                    Scanner reader = new Scanner(outputFile);
-//                    seed = reader.nextLong();
-//                    prevPath = reader.next();
-//                } else {
-//                    outputFile.delete();
-//                    outputFile.createNewFile();
-//                }
-                outputFile.delete();
-                outputFile.createNewFile();
-            }
+
+           if (!outputFile.createNewFile()) {
+               outputFile.delete();
+               outputFile.createNewFile();
+           }
+
             if (loadFlag) {
                 writer.println(prevSeed);
-                writer.println(prevPath + p.getPath());
+                writer.flush();
+                writer.println(prevPath + player.getPath());
+                writer.flush();
             } else {
                 writer.println(seed);
-                writer.println(p.getPath());
+                writer.flush();
+                writer.println(player.getPath());
+                writer.flush();
             }
             writer.close();
         } catch (IOException e) {
@@ -222,76 +237,12 @@ public class Engine {
         }
     }
 
-    public static void main(String[] args)
-    throws Exception{
-        Engine engine = new Engine();
-        engine.initializeRenderer();
-
-//        TETile[][] ans = engine.interactWithInputString("l");
-//        if (ans == null)
-//            return;
-//        engine.renderWorld();
-
-//            engine.interactWithInputString("N19980711SDSSSSSSSSSDDD:Q");
-//            engine.renderWorld();
-//
-        engine.interactWithInputString("n7193300625454684331saaawasdaawdwsd");
-        engine.renderWorld();
-        Thread.sleep(1000);
-
-        engine.interactWithInputString("n7193300625454684331saaawasdaawd:q");
-        engine.renderWorld();
-        Thread.sleep(1000);
-//
-        engine.interactWithInputString("Lwsd");
-        engine.renderWorld();
-        Thread.sleep(1000);
-        System.out.println("phase1");
-//
-//        engine.interactWithInputString("L:Q");
-//        Thread.sleep(500);
-//        System.out.println("phase2");
-//        engine.renderWorld();
-//
-//        engine.interactWithInputString("LDSS:Q");
-//        Thread.sleep(500);
-//        System.out.println("phase2");
-//        engine.renderWorld();
-//
-//        engine.interactWithInputString("LSSS:Q");
-//        Thread.sleep(500);
-//        System.out.println("phase2");
-//        engine.renderWorld();
-//
-//        engine.interactWithInputString("LSSSSD:Q");
-//        System.out.println("phase3");
-//        engine.renderWorld();
-//        Thread.sleep(1000);
-//
-//        engine.interactWithInputString("LDD:Q");
-//        System.out.println("phase4");
-//        engine.renderWorld();
-
-        //engine.load(false);
-        //System.out.print("hello");
 
 
-//        Random r = new Random();
-//        while (true) {
-//            engine.interactWithInputString("N" + r.nextLong() + "SWSSSADDA:Q");
-//        }
-        //engine.save();
-//
-//        char input = 0;
-//        while (input != 'q') {
-//            if (StdDraw.hasNextKeyTyped()) {
-//                input = StdDraw.nextKeyTyped();
-//                engine.move(input);
-//                engine.renderWorld();
-//            }
-//            Thread.sleep(500);
-//        }
-//        engine.save();
-//        System.out.println("done");
+    public static void main(String[] args){
+        Engine engine = new Engine(true);
+        engine.interactWithInputString("N123213213212133Swsaad:Q");
+        engine.interactWithInputString("LSADS:q");
+        System.out.println("done");
     }
 }
