@@ -159,8 +159,8 @@ public class Engine {
 //                return true;
 //            }
             String sed;
-            if (!reader.hasNext())
-              sed = reader.next();
+            if (!reader.hasNextLine())
+              sed = reader.nextLine();
 
             prevSeed = reader.nextLong();
             if (reader.hasNext())
