@@ -202,6 +202,7 @@ public class Engine {
 //            } else {
               reader.close();
               interactWithInputString("N" + prevSeed + "S" + prevPath);
+              player.clearPath();
 //            }
         } catch (IOException e) {
             System.out.println("load error");

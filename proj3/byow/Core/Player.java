@@ -25,6 +25,10 @@ public class Player {
         return path;
     }
 
+    public void clearPath() {
+        path = "";
+    }
+
     public void addPlayer() {
         for (x = (worldWidth / 8 + r.nextInt(worldWidth / 3)); x < worldWidth; x++) {
             for (y = (worldHeight / 8 + r.nextInt(worldHeight / 3)); y < worldHeight; y++) {
