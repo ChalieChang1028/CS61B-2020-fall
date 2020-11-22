@@ -13,7 +13,9 @@ public class Main {
         } else if (args.length == 1) {
             Engine engine = new Engine();
             System.out.println("Running with arg " + args[0]);
-            engine.interactWithInputString(args[0]);
+            TETile[][] ans = engine.interactWithInputString(args[0]);
+            if (ans == null)
+                return;
             System.out.println(engine.toString());
         } else {
             Engine engine = new Engine();

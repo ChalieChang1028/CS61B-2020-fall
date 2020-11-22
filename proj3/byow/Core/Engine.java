@@ -109,7 +109,9 @@ public class Engine {
                     index++;
                 } else if (input.charAt(index) == 'l' || input.charAt(index) == 'L') {
                     loadFlag = true;
-                    load(false);
+                    if (load(false)) {
+                        return null;
+                    }
                     index++;
                 } else if (input.charAt(index) == 'S' || input.charAt(index) == 's') {
                     save();
@@ -141,38 +143,43 @@ public class Engine {
         p.move(c);
     }
 
-    private void load(boolean replay) {
+    private boolean load(boolean replay) {
         try {
             File inputFile = new File("fa20-proj3-g488\\proj3\\byow\\Core\\saved.txt");
             Scanner reader = new Scanner(inputFile);
-            if (reader.hasNext()) {
-                prevSeed = reader.nextLong();
-                if (reader.hasNext())
-                    prevPath = reader.next();
+            if (!reader.hasNext()) {
+                return true;
+            }
 
-                if (replay) {
-                    String currentPath = p.getPath();
-                    interactWithInputString("N" + prevSeed + "S");
-                    renderWorld();
-                    int ind = 0;
-                    while (ind < prevPath.length()) {
-                        p.move(prevPath.charAt(ind));
-                        renderWorld();
-                        Thread.sleep(100);
-                        ind++;
-                    }
-                    Thread.sleep(2000);
-                    interactWithInputString("N" + seed + "S" + currentPath);
-                    renderWorld();
+            prevSeed = reader.nextLong();
+            if (reader.hasNext())
+                prevPath = reader.next();
 
-                } else {
-                    interactWithInputString("N" + prevSeed + "S" + prevPath);
+            if (replay) {
+                String currentPath = p.getPath();
+                interactWithInputString("N" + prevSeed + "S");
+                renderWorld();
+                int ind = 0;
+                while (ind < prevPath.length()) {
+                    p.move(prevPath.charAt(ind));
+                    renderWorld();
+                    Thread.sleep(100);
+                    ind++;
                 }
+                Thread.sleep(2000);
+                interactWithInputString("N" + seed + "S" + currentPath);
+                renderWorld();
+
+            } else {
+                interactWithInputString("N" + prevSeed + "S" + prevPath);
             }
             reader.close();
+
         } catch (IOException | InterruptedException e) {
             System.out.println("load error");
         }
+
+        return false;
     }
 
     public void save() {
@@ -203,9 +210,6 @@ public class Engine {
             System.out.println("save error");
         }
     }
-
-
-    
 
     public static void main(String[] args)
     throws Exception{
