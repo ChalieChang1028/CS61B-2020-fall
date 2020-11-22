@@ -159,7 +159,8 @@ public class Engine {
 //                return true;
 //            }
 
-            prevSeed = reader.nextLong();
+            String Seed = reader.next();
+            System.out.println(Seed);
             if (reader.hasNext())
                 prevPath = reader.next();
 
