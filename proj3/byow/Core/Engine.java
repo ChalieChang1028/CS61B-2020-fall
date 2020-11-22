@@ -153,7 +153,7 @@ public class Engine {
 
     private void load(boolean replay) {
         try {
-            File inputFile = new File("save.txt");
+            File inputFile = new File("saved.txt");
             Scanner reader = new Scanner(inputFile);
 //            if (!reader.hasNext()) {
 //                return true;
@@ -207,11 +207,11 @@ public class Engine {
                 outputFile.createNewFile();
             }
             if (loadFlag) {
-                writer.write(prevSeed + " ");
-                writer.write(prevPath + p.getPath());
+                writer.println(prevSeed);
+                writer.println(prevPath + p.getPath());
             } else {
-                writer.write(seed + " ");
-                writer.write(p.getPath());
+                writer.println(seed);
+                writer.println(p.getPath());
             }
             writer.close();
         } catch (IOException e) {
